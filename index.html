@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Independent Structural Risk Assessment for Cryo-EM Programs</title>
+
+<style>
+:root{
+  --text:#2f343b;
+  --muted:#5f6670;
+  --line:#e4e8ee;
+  --bg:#fff;
+  --card:#fbfcfd;
+  --btn:#1f2937;
+  --btnText:#fff;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  line-height:1.7;
+  font-size:18px;
+}
+
+.wrap{
+  max-width:1200px;
+  margin:0 auto;
+  padding:80px 30px 100px;
+}
+
+h1{
+  font-size:42px;
+  margin:0 0 16px;
+  font-weight:650;
+  letter-spacing:-0.015em;
+  line-height:1.18;
+  color:var(--text);
+}
+
+h2{
+  font-size:32px;
+  font-weight:600;
+  margin:0 0 24px;
+  letter-spacing:-0.01em;
+  color:var(--text);
+}
+
+p{
+  margin:16px 0;
+  color:var(--muted);
+  font-size:18px;
+}
+
+.hero p{
+  font-size:20px;
+}
+
+.row{
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-top:30px;
+}
+
+.btn{
+  display:inline-block;
+  padding:14px 20px;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:600;
+  font-size:16px;
+  border:1px solid var(--btn);
+  background:var(--btn);
+  color:var(--btnText);
+}
+
+.btn.secondary{
+  background:transparent;
+  color:var(--btn);
+}
+
+section:not(.hero) {
+  margin-top: 100px;
+}
+
+.card{
+  border:1px solid var(--line);
+  background:var(--card);
+  border-radius:10px;
+  padding:28px 32px;
+}
+
+ul{
+  margin:12px 0 0 22px;
+  color:var(--muted);
+}
+
+li{
+  margin:10px 0;
+  font-size:18px;
+}
+
+.hr{
+  height:1px;
+  background:var(--line);
+  margin:100px 0;
+}
+
+.small{
+  font-size:15px;
+  color:var(--muted);
+}
+
+.footer{
+  margin-top:120px;
+  padding-top:30px;
+  border-top:1px solid var(--line);
+}
+
+.info{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin-left:8px;
+  width:20px; 
+  height:20px;
+  border-radius:50%;
+  background:#e0f2fe; 
+  color:#0284c7;      
+  font-size:13px;
+  font-weight:700;
+  cursor:help;
+  vertical-align:middle;
+  line-height:1;
+  transition:background 0.2s ease;
+}
+
+.info:hover{
+  background:#bae6fd;
+  color:#0369a1;
+}
+
+.info .tip{
+  visibility:hidden;
+  opacity:0;
+  width:300px;
+  background:rgba(31, 41, 55, 0.95); 
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  color:#f9fafb;
+  text-align:left;
+  padding:14px 16px;
+  border-radius:8px;
+  position:absolute;
+  bottom:140%;
+  left:50%;
+  transform:translateX(-50%);
+  transition:opacity .15s ease;
+  font-size:14.5px;
+  line-height:1.6;
+  z-index:100;
+  box-shadow:0 6px 10px -2px rgba(0, 0, 0, 0.1), 0 3px 6px -2px rgba(0, 0, 0, 0.06);
+  border:1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info:hover .tip{
+  visibility:visible;
+  opacity:1;
+}
+
+.process-card{
+  padding: 26px 28px;
+}
+
+.timeline-wrap{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+.timeline{
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin-top: 2px;
+}
+
+.timeline::before{
+  content:"";
+  position:absolute;
+  left: 12px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: #d8dee8;
+}
+
+.timeline-step{
+  position: relative;
+  display: flex;
+  gap: 16px;
+  padding: 10px 0 14px 0;
+}
+
+.timeline-dot{
+  position: relative;
+  z-index: 1;
+  width: 12px;
+  height: 12px;
+  margin-top: 8px;
+  margin-left: 7px;
+  border-radius: 50%;
+  background: #64748b;
+  border: 2px solid #f8fafc;
+  box-shadow: 0 0 0 2px #dbe3ef;
+  flex: 0 0 auto;
+}
+
+.timeline-content{
+  min-width: 0;
+}
+
+.timeline-label{
+  font-weight: 700;
+  color: #374151;
+  font-size: 17px;
+  line-height: 1.4;
+  margin-bottom: 2px;
+}
+
+.timeline-text{
+  color: #5b6470;
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.timeline-step.is-delivery .timeline-dot{
+  background: #0ea5e9;
+  border-color: #f8fafc;
+  box-shadow:
+    0 0 0 2px #dbeafe,
+    0 0 0 6px rgba(14,165,233,0.18);
+}
+
+.timeline-parallel{
+  margin-top: 2px;
+  border-top: 1px dashed #d9e1ec;
+  padding-top: 14px;
+  padding-left: 0;
+}
+
+.parallel-card{
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #f8fbff;
+  border: 1px solid #dbeafe;
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.parallel-dot{
+  width: 12px;
+  height: 12px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: #0ea5e9;
+  border: 2px solid #f8fafc;
+  box-shadow:
+    0 0 0 2px #dbeafe,
+    0 0 0 6px rgba(14,165,233,0.16);
+  flex: 0 0 auto;
+}
+
+.parallel-content{
+  min-width: 0;
+}
+
+.parallel-label{
+  font-weight: 700;
+  color: #334155;
+  font-size: 17px;
+  line-height: 1.4;
+  margin-bottom: 2px;
+}
+
+.parallel-text{
+  color: #475569;
+  font-size: 17px;
+  line-height: 1.55;
+  font-weight: 600;
+}
+
+@media (max-width: 700px){
+  .process-card{
+    padding: 22px 20px;
+  }
+
+  .timeline-label,
+  .timeline-text,
+  .parallel-label,
+  .parallel-text{
+    font-size: 16px;
+  }
+
+  .parallel-card{
+    padding: 12px;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<section class="hero">
+  <h1>Independent Structural Risk Assessment for Cryo-EM Programs</h1>
+
+  <p><strong>Built for decision workflows in structural biology and drug discovery.</strong></p>
+
+  <p>
+    Designed to integrate with existing structural biology workflows without disrupting internal processes.
+  </p>
+  
+  <p>
+    Evaluates reconstructed cryo-EM maps for decision support.<br>
+    Delivers a concise risk memo to support program-level Go/No-Go alignment prior to additional structural or experimental investment.
+    <span class="info">i<span class="tip">
+    Decision-focused assessment of reconstructed cryo-EM maps, summarized in a concise risk memo to support program-level Go/No-Go decisions prior to further structural or experimental investment.
+    </span></span>
+  </p>
+
+  <div class="row">
+    <a class="btn" href="mailto:evaluation@cryomapdecision.com?subject=Confidential%20Intake%20Request%3A%20%5BProject%20Code%20%2F%20Program%20Name%5D&body=Hello%20CryoMapDecision%20team%2C%0D%0A%0D%0AI%20would%20like%20to%20request%20a%20confidential%20review%20for%20a%20cryo-EM%20map%20assessment.%0D%0A%0D%0AProject%20code%20%2F%20program%20name%3A%0D%0ACompany%3A%0D%0APrimary%20question%20%28Go%2FNo-Go%20concern%29%3A%0D%0AUrgency%20%28standard%20%2F%20accelerated%20triage%29%3A%0D%0APreferred%20next%20step%20%28secure%20upload%20link%20%2F%20NDA%20first%20%2F%20brief%20call%29%3A%0D%0A%0D%0APlease%20provide%20the%20appropriate%20next%20step%20and%20secure%20intake%20instructions.%0D%0A%0D%0ABest%20regards%2C">Start Confidential Review</a>
+    <a class="btn secondary" href="mailto:evaluation@cryomapdecision.com?subject=NDA%20%2F%20Security%20Summary%20Request%3A%20%5BCompany%20%2F%20Team%5D&body=Hello%20CryoMapDecision%20team%2C%0D%0A%0D%0APlease%20send%20the%20NDA%20template%20and%20security%20summary%20for%20internal%20review.%0D%0A%0D%0ACompany%20%2F%20team%3A%0D%0AProgram%20area%20%28optional%29%3A%0D%0APreferred%20next%20step%20%28NDA%20only%20%2F%20security%20summary%20%2F%20brief%20call%29%3A%0D%0A%0D%0AIf%20available%2C%20please%20also%20share%20secure%20data%20transfer%20and%20retention%20details.%0D%0A%0D%0ABest%20regards%2C">Request NDA / Security Summary</a>
+  </div>
+
+  <p class="small" style="margin-top:24px;">
+    Operates as a risk assessment function with experience in large-scale structural data environments.
+  </p>
+
+  <p class="small">
+    Standard NDA template available. Compatible with standard client procurement processes.
+  </p>
+</section>
+
+<div class="hr"></div>
+
+<section>
+  <h2>Scope</h2>
+  <div class="card">
+    <ul>
+      <li><b>Accepted inputs:</b> reconstructed maps (.mrc / .map)</li>
+
+      <li>
+        <b>Evaluation focus:</b> map consistency, regional confidence, ligand pose support (if applicable)
+        <span class="info">i<span class="tip">Map-level review of density evidence for structural consistency and region-specific confidence. Where a ligand interpretation is provided, ligand pose support is assessed from density evidence only (not docking, pose generation, or simulation).</span></span>
+      </li>
+
+      <li>
+        <b>Exclusions:</b> no raw data processing, no particle picking, no map reconstruction, no full structure delivery
+        <span class="info">i<span class="tip">Scope excludes micrograph preprocessing, particle picking/extraction, 3D reconstruction, and atomic model building/delivery. This service is a decision-oriented map assessment based on reconstructed cryo-EM maps.</span></span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Deliverables (Decision-Ready)</h2>
+  <div class="card">
+    <ul>
+      <li><b>Executive Risk Memo</b> with explicit assumption & uncertainty framing <span class="info">i<span class="tip">Decision-focused document summarizing structural evidence quality and uncertainty.</span></span></li>
+      <li>Quantitative structural consistency indicators<span class="info">i<span class="tip">Quantitative measures describing density coherence and interpretability.</span></span></li>
+      <li>Region-level confidence assessment<span class="info">i<span class="tip">Localized reliability estimates across spatial segments of the density map.</span></span></li>
+      <li>Decision-impact summary suitable for internal review decks</li>
+      <li>Applicable before downstream computational modeling (including FEP) or experimental commitment</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Engagement Model</h2>
+  <div class="card">
+    <ul>
+      <li>
+        <strong>Engagement format:</strong> rapid triage, case review, or program support
+        <span class="info">i<span class="tip">Flexible scope based on a single decision point or broader program needs.</span></span>
+      </li>
+      <li>
+        <strong>Procurement-ready:</strong> one-off or repeat engagements under NDA
+        <span class="info">i<span class="tip">Can be set up as a single assessment or repeated work under an existing NDA.</span></span>
+      </li>
+      <li>
+        <strong>Decision timing:</strong> aligned to stage-gates and Go/No-Go checkpoints
+        <span class="info">i<span class="tip">Designed to support internal decision points before further modeling or experiments.</span></span>
+      </li>
+      <li>
+        <strong>Commercial model:</strong> project-based billing, case-specific scope
+        <span class="info">i<span class="tip">Pricing is scoped per case based on complexity and turnaround.</span></span>
+      </li>
+    </ul>
+    <p class="small" style="margin-top:16px;">
+      Built for industry decision workflows and lean team operations.
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>Process & Timeline</h2>
+  <div class="card process-card">
+
+    <div class="timeline-wrap">
+
+      <div class="timeline">
+        <div class="timeline-step">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-label">Day 0</div>
+            <div class="timeline-text">Data intake &amp; Scope alignment (Go/No-Go criteria)</div>
+          </div>
+        </div>
+
+        <div class="timeline-step">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-label">Day 1–3</div>
+            <div class="timeline-text">Structured evaluation &amp; density-evidence review</div>
+          </div>
+        </div>
+
+        <div class="timeline-step is-delivery">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-label">Day 4–5</div>
+            <div class="timeline-text">Decision memo delivery (risk assessment + decision-ready summary)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-parallel">
+        <div class="parallel-card">
+          <div class="parallel-content">
+            <div class="parallel-label">
+              Accelerated triage
+              <span class="info">i<span class="tip">Defined-scope urgent review intended for rapid red-flag screening, not a full decision memo.</span></span>
+            </div>
+            <div class="parallel-text">48-hour red-flag review for defined-scope urgent cases</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <h2>Confidentiality & Data Governance</h2>
+  <div class="card">
+    <ul>
+      <li>Reconstructed maps only (no raw data required).</li>
+      <li>Encrypted transfer options available.<span class="info">i<span class="tip">Secure data transmission using industry-standard cryptographic protocols.</span></span></li>
+      <li>Client data is segregated per engagement.<span class="info">i<span class="tip">Data isolation ensuring no cross-project access or commingling.</span></span></li>
+      <li>No cross-project reuse or incorporation into shared datasets.</li>
+      <li>No model training or data retention beyond the agreed scope.<span class="info">i<span class="tip">Duration of stored client data prior to secure deletion.</span></span></li>
+      <li><b>Default deletion within 30 days unless otherwise agreed.</b></li>
+      <li>NDA available upon request.</li>
+      <li>Designed to minimize IP exposure and align with client confidentiality requirements.</li>
+    </ul>
+  </div>
+</section>
+
+<div class="footer">
+  <div class="small">
+    Contact: <a href="mailto:evaluation@cryomapdecision.com?subject=Inquiry%20for%20CryoMapDecision&body=Hello%20CryoMapDecision%20team%2C%0D%0A%0D%0A">evaluation@cryomapdecision.com</a> •
+    Typical response within 1–2 business days •
+    Sydney, Australia
+  </div>
+
+  <div class="small" style="margin-top:8px;">
+    Operates under Australian jurisdiction.
+  </div>
+
+  <div class="small" style="margin-top:6px;">
+    Project-based billing (case-specific).
+  </div>
+
+  <div class="small" style="margin-top:12px;">
+    © <span id="y"></span> CryoMapDecision. All rights reserved.
+  </div>
+</div>
+
+</div>
+
+<script>
+document.getElementById("y").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
